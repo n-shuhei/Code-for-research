@@ -1,0 +1,27 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+import datetime
+import netCDF4
+from matplotlib.colors import Normalize #for color bar 
+
+#read Crop_yield
+filename = 'YLD_Ref.run01_O3_IRR_1st_2020.nc'
+ncdata = netCDF4.Dataset(filename, 'r', format='NETCDF4')
+C = ncdata.variables['Crop_yield'][:]
+
+#figure
+fig = plt.figure()
+#C = np.ma.masked_where(C<-100, C)
+#C = np.log(C+1)
+vma = np.max(C)
+vmi = np.min(C)
+print(vma,vmi)
+#C = np.ma.masked_where(C<0, C)
+cm = plt.cm.get_cmap('Greens')
+ax = fig.add_subplot(111)
+im = ax.imshow(C, cmap=cm, origin='lower', norm=Normalize(vmin=vmi, vmax=vma))
+#ax.set_xlabel('longitude')
+#ax.set_ylabel('latitude')
+fig.colorbar(im, label='Crop_yield(kg/ha)', orientation='horizontal')
+plt.show()
